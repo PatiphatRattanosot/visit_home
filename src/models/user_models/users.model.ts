@@ -7,7 +7,11 @@ const schema = new Schema(
       required: true,
       unique: true,
     },
-    name: {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
       type: String,
       required: true,
     },
@@ -15,15 +19,23 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    role: {
+    role: [
+      {
+        type: String,
+        required: true,
+        enum: ["Admin", "Teacher", "Student"],
+        default: "Student",
+      },
+    ],
+    tpye: {
       type: String,
       required: true,
-      enum: ["Student", "Teacher", "Admin"],
+      enum: ["Teacher", "Student"],
     },
   },
   {
     timestamps: true,
-    discriminatorKey: "role",
+    discriminatorKey: "tpye",
   }
 );
 const UserModel = model("User", schema);

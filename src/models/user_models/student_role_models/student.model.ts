@@ -3,7 +3,7 @@ import UsersModel from "../users.model";
 
 const StudentSchema = new Schema(
   {
-    student_id: {
+    user_id: {
       type: String,
       required: true,
       unique: true,
@@ -53,6 +53,6 @@ const StudentSchema = new Schema(
     timestamps: true,
   }
 );
-
+//12345bp@bangpaeschool.ac.th
 const StudentModel = UsersModel.discriminator("Student", StudentSchema);
 export default StudentModel;

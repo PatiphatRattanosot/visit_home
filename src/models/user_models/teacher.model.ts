@@ -3,7 +3,7 @@ import UserModel from "./users.model";
 
 const schema = new Schema(
   {
-    teacher_id: {
+    user_id: {
       type: String,
       required: true,
       unique: true,
@@ -14,13 +14,13 @@ const schema = new Schema(
     },
     status: {
       type: String,
-      default: "active",
+      default: "รับราบการ", //รับราชการ, ลาออก,เกษียณ,ย้ายโรงเรียน
     },
   },
   {
     timestamps: true,
   }
 );
-
+//bp123@bangpaeschool.ac.th
 const TeacherModel = UserModel.discriminator("Teacher", schema);
 export default TeacherModel;
