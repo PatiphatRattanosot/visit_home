@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 import { jwt } from "@elysiajs/jwt";
+import { cors } from "@elysiajs/cors";
 const { JWT_SECRET } = process.env;
 
 // Connect Database
@@ -14,6 +15,11 @@ import { AuthController } from "./controllers/auth.controller";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
+  .use(
+    cors({
+      origin: "*",
+    })
+  )
   .listen(3000)
   .use(jwt({ secret: JWT_SECRET }))
   .use(
