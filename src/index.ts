@@ -7,8 +7,9 @@ const { JWT_SECRET } = process.env;
 import "./database/db.setup";
 
 // Controllers
-import { YearAndClassController } from "./controllers/year_class.controller";
-import { TeacherController } from "./controllers/teacher.controller";
+import YearAndClassController from "./controllers/year_class.controller";
+import UsersControllers from "./controllers/users.controller";
+import TeacherController from "./controllers/teacher.controller";
 import { AuthController } from "./controllers/auth.controller";
 
 const app = new Elysia()
@@ -22,6 +23,7 @@ const app = new Elysia()
           { name: "App", description: "General endpoints" },
           { name: "Student", description: "Student endpoints" },
           { name: "Teacher", description: "Teacher endpoints" },
+          { name: "Admin", description: "Admin endpoints" },
           { name: "Year And Class", description: "Year And Class endpoints" },
           { name: "Auth", description: "Auth endpoints" },
         ],
@@ -49,8 +51,23 @@ const app = new Elysia()
               throw new Error("Access Forbidden!!");
             }
           })
-          .use(YearAndClassController)
-          .use(TeacherController)
+          .group("/year-class", (app) =>
+            app
+              .use(YearAndClassController.create_year)
+              .use(YearAndClassController.create_class)
+              .use(YearAndClassController.get_year)
+          )
+          .group("/users", (app) =>
+            app
+              .use(UsersControllers.get_users)
+              .use(UsersControllers.get_by_role)
+              .group("/teacher", (app) =>
+                app
+                  .use(TeacherController.create_teacher)
+                  .use(TeacherController.make_admin)
+                  .use(TeacherController.remove_admin)
+              )
+          )
       )
       .use(AuthController)
   );
