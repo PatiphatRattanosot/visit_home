@@ -3,7 +3,7 @@ import UsersModel from "../users.model";
 
 const StudentSchema = new Schema(
   {
-    studentId: {
+    student_id: {
       type: String,
       required: true,
       unique: true,
@@ -18,7 +18,7 @@ const StudentSchema = new Schema(
       required: false,
       unique: true,
     },
-    classId: {
+    class_id: {
       type: Schema.Types.ObjectId,
       ref: "Class",
       required: true,

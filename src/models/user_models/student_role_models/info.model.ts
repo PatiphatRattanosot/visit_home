@@ -1,5 +1,5 @@
 import { Document, Schema, Types, model } from "mongoose";
-import UsersModel, { IUser } from "../users.model";
+import UsersModel from "../users.model";
 
 const InfoSchema = new Schema({
   image: {

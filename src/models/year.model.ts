@@ -6,10 +6,15 @@ const YearSchema = new Schema(
       type: Number,
       required: true,
     },
-    classId: [
+    class: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Class",
+        grade: { type: Number, required: false },
+        room: { type: Number, required: false },
+        teacher_id: {
+          type: Schema.Types.ObjectId,
+          ref: "Teacher",
+          required: false,
+        },
       },
     ],
   },

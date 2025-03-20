@@ -3,7 +3,7 @@ import UserModel from "./users.model";
 
 const schema = new Schema(
   {
-    teacherId: {
+    teacher_id: {
       type: String,
       required: true,
       unique: true,

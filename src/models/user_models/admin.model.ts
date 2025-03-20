@@ -6,7 +6,7 @@ const AdminSchema = new Schema(
       type: String,
       required: true,
     },
-    adminId: {
+    admin_id: {
       type: String,
       required: true,
     },
