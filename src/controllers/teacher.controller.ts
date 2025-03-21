@@ -1,12 +1,11 @@
 import { Elysia, t } from "elysia";
 import TeacherModel from "../models/user_models/teacher.model";
-import UserModel from "../models/user_models/users.model";
 
 const create_teacher = async (app: Elysia) =>
   app.post(
     "/",
     async ({ set, body }) => {
-      const { first_name, last_name, prefix, role, user_id } = body;
+      const { first_name, last_name, prefix, role, user_id, phone } = body;
       if (!first_name || !last_name || !prefix || !role || !user_id) {
         set.status = 400;
         return { message: "กรุณากรอกข้อมูลให้ครบ" };
@@ -25,10 +24,11 @@ const create_teacher = async (app: Elysia) =>
           prefix,
           role,
           user_id,
+          phone,
         });
         teacher.save();
         set.status = 201;
-        return { message: "เพิ่มครูที่ปรึกษาสำเร็จ", data: teacher };
+        return { message: "เพิ่มครูที่ปรึกษาสำเร็จ", teacher };
       } catch (error) {
         set.status = 500;
         return {
@@ -49,76 +49,42 @@ const create_teacher = async (app: Elysia) =>
     }
   );
 
-const make_admin = async (app: Elysia) =>
-  app.patch(
-    "/make/:email",
-    async ({ set, params: { email } }) => {
+const update_teacher = async (app: Elysia) =>
+  app.put(
+    "/",
+    async ({ set, body }) => {
       try {
-        if (!email) {
-          set.status = 400;
-          return { message: "กรุณากรอกอีเมล์" };
-        }
-        const teacher = await UserModel.findOne({
-          email,
-        });
-        console.log(teacher);
+        const { first_name, last_name, prefix, phone, user_id } = body;
+        const email = `bp${user_id}@bangpaeschool.ac.th`;
+        const user = await TeacherModel.findOne({ email });
 
-        if (!teacher) {
+        if (!user) {
           set.status = 404;
           return { message: "ไม่พบครูที่ปรึกษา" };
         }
-        if (teacher.role.includes("Admin")) {
-          set.status = 200;
-          return { message: "ครูที่ปรึกษาเป็นผู้ดูแลระบบอยู่แล้ว" };
-        }
-
-        teacher.role.push("Admin");
-        await teacher.save();
-
+        await user.save();
         set.status = 200;
-        return {
-          message: `เพิ่มสิทธ์ผู้ดูแลให้ ${teacher.prefix} ${teacher.first_name} สำเร็จ`,
-        };
       } catch (error) {
-        console.error(error);
         set.status = 500;
-        return { message: "เซิฟเวอร์ผิดพลาดไม่สามารถเพิ่มผู้ดูแลระบบได้" };
+        return {
+          message: "เซิฟเวอร์ผิดพลาดไม่สามารถแก้ไขข้อมูลครูที่ปรึกษาได้",
+        };
       }
     },
     {
-      detail: { tags: ["Teacher"], description: "เพิ่มผู้ดูแลระบบ" },
+      body: t.Object({
+        user_id: t.String(),
+        prefix: t.String(),
+        first_name: t.String(),
+        last_name: t.String(),
+        phone: t.String(),
+      }),
+      detail: { tags: ["Teacher"], description: "แก้ไขข้อมูลครูที่ปรึกษา" },
     }
   );
 
-const remove_admin = async (app: Elysia) =>
-  app.patch(
-    "/remove/:email",
-    async ({ set, params: { email } }) => {
-      try {
-        if (!email) {
-          set.status = 400;
-          return { message: "กรุณากรอกอีเมล์" };
-        }
-        const teacher = await UserModel.findOne({ email });
-        if (!teacher) {
-          set.status = 404;
-          return { message: "ไม่พบครูที่ปรึกษา" };
-        }
-        teacher.role = teacher.role.filter((r) => r !== "Admin");
-        await teacher.save();
-        set.status = 200;
-        return {
-          message: `ลบสิทธ์ผู้ดูแลให้ ${teacher.prefix} ${teacher.first_name} สำเร็จ`,
-        };
-      } catch (error) {
-        set.status = 500;
-        return { message: "เซิฟเวอร์ผิดพลาดไม่สามารถลบผู้ดูแลระบบได้" };
-      }
-    },
-    {
-      detail: { tags: ["Teacher"], description: "ลบผู้ดูแลระบบ" },
-    }
-  );
-
-const TeacherController = { create_teacher, make_admin, remove_admin };
+const TeacherController = {
+  create_teacher,
+  update_teacher,
+};
 export default TeacherController;

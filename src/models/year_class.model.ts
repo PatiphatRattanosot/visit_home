@@ -12,7 +12,7 @@ const YearSchema = new Schema(
         room: { type: Number, required: false },
         teacher_id: {
           type: Schema.Types.ObjectId,
-          ref: "Teacher",
+          ref: "User",
           required: false,
         },
       },

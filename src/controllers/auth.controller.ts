@@ -15,12 +15,12 @@ export const AuthController = (app: Elysia) =>
             return { error: "ต้องการอีเมล" };
           }
           const user = await UserModel.findOne({ email: email });
+
           if (!user) {
             set.status = 404;
             return { error: "ไม่พบอีเมลนี้ในระบบ" };
           }
-
-          const token = await jwt.sign({ email, role: user.role });
+          const token = await jwt.sign({ email, role: user.role.toString() });
           auth.set({
             value: token,
             httpOnly: true,
@@ -30,11 +30,13 @@ export const AuthController = (app: Elysia) =>
           set.status = 200;
           return {
             message: "เข้าสู่ระบบสำเร็จ",
-            data: { user },
+            token,
+            user,
           };
         } catch (error) {
           set.status = 500;
-          return { error: "เซิฟเวอร์เกิดข้อผิดพลาดไม่สามารถเข้าสู่ระบบได้" };
+          console.log(error);
+          return { message: "เซิฟเวอร์เกิดข้อผิดพลาดไม่สามารถเข้าสู่ระบบได้" };
         }
       },
       {
