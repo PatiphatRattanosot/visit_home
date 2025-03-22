@@ -53,9 +53,6 @@ const app = new Elysia()
       .guard(
         {
           beforeHandle({ jwt, set, cookie: { auth } }) {
-            console.log(auth);
-            console.log("asd");
-
             if (!auth?.value) {
               set.status = 401;
               return "Unauthorized: No token provided";
