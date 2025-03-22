@@ -16,7 +16,7 @@ import { AuthController } from "./controllers/auth.controller";
 const app = new Elysia()
   .use(
     cors({
-      origin: "*",
+      origin: process.env.FRONTEND_URL,
     })
   )
   .listen(3000)
