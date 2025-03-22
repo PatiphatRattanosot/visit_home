@@ -13,10 +13,11 @@ import UsersControllers from "./controllers/users.controller";
 import TeacherController from "./controllers/teacher.controller";
 import { AuthController } from "./controllers/auth.controller";
 //.derive
+
 const app = new Elysia()
   .use(
     cors({
-      origin: process.env.FRONTEND_URL,
+      origin: process.env.FRONTEND_URL || "*",
     })
   )
   .listen(3000)
@@ -39,7 +40,7 @@ const app = new Elysia()
           },
           {
             name: "Auth",
-            description: "API สำหรับการเข้าสู่ระบบและยืนยันตัวตน",
+            description: "API สำหรับการเข้าสู่ระบบและยืนยันตัวตน ",
           },
         ],
       },
