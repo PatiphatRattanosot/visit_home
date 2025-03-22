@@ -45,6 +45,7 @@ const app = new Elysia()
       },
     })
   )
+  .get("/", () => "Hello Elysia", { detail: { tags: ["App"] } })
   .group("/api/v1", (app) =>
     app
       .guard(
@@ -90,7 +91,6 @@ const app = new Elysia()
             )
       )
       .use(AuthController)
-      .get("/", () => "Hello Elysia", { detail: { tags: ["App"] } })
   );
 
 console.log(
