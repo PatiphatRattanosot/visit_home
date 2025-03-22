@@ -17,7 +17,8 @@ import { AuthController } from "./controllers/auth.controller";
 const app = new Elysia()
   .use(
     cors({
-      origin: process.env.FRONTEND_URL || "*",
+      origin: process.env.FRONTEND_URL || "http://localhost:3001",
+      credentials: true,
     })
   )
   .listen(3000)
@@ -52,7 +53,13 @@ const app = new Elysia()
       .guard(
         {
           beforeHandle({ jwt, set, cookie: { auth } }) {
-            if (!auth?.value) return { message: "Unauthorized: No token" };
+            console.log(auth);
+            console.log("asd");
+
+            if (!auth?.value) {
+              set.status = 401;
+              return "Unauthorized: No token provided";
+            }
             try {
               const token = jwt.verify(auth.value);
               if (!token) {

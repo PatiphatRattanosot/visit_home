@@ -17,13 +17,14 @@ export const AuthController = (app: Elysia) =>
           const user = await UserModel.findOne({ email: email });
 
           if (!user) {
-            set.status = 404;
+            set.status = 404; 
             return { error: "ไม่พบอีเมลนี้ในระบบ" };
           }
           const token = await jwt.sign({ email, role: user.role.toString() });
           auth.set({
             value: token,
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
             maxAge: 24 * 60 * 60 * 1000,
             path: "/",
           });

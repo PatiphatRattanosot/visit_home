@@ -5,7 +5,7 @@ import { Elysia, t } from "elysia";
 const get_users = async (app: Elysia) =>
   app.get(
     "/",
-    async ({ set }) => {
+    async ({ set, cookie: { auth } }) => {
       try {
         const users = await UserModel.find();
         if (!users) {
