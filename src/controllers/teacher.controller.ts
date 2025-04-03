@@ -5,8 +5,8 @@ const create_teacher = async (app: Elysia) =>
   app.post(
     "/",
     async ({ set, body }) => {
-      const { first_name, last_name, prefix, role, user_id, phone } = body;
-      if (!first_name || !last_name || !prefix || !role || !user_id) {
+      const { first_name, last_name, prefix, user_id, phone } = body;
+      if (!first_name || !last_name || !prefix || !user_id) {
         set.status = 400;
         return { message: "กรุณากรอกข้อมูลให้ครบ" };
       }
@@ -22,7 +22,7 @@ const create_teacher = async (app: Elysia) =>
           first_name,
           last_name,
           prefix,
-          role,
+          role: ["Teacher"],
           user_id,
           phone,
         });
@@ -41,7 +41,6 @@ const create_teacher = async (app: Elysia) =>
         prefix: t.String(),
         first_name: t.String(),
         last_name: t.String(),
-        role: t.Array(t.String()),
         user_id: t.String(),
         phone: t.String(),
       }),
